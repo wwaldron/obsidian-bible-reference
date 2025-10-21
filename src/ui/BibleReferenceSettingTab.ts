@@ -140,8 +140,27 @@ Obsidian Bible Reference  is proudly powered by
             .onChange(async (value) => {
               this.plugin.settings.bookTagging = value
               await this.plugin.saveSettings()
+              pluginEvent.trigger('bible-reference:settings:re-render', [])
             })
         )
+
+      if (this.plugin.settings?.bookTagging) {
+        new Setting(this.expertSettingContainer)
+          .setName('Book Tag Template')
+          .setDesc(
+            'Customize the book tag format. Use {book} for book name, {chapter} for chapter number. Example: Bible/{book} → #Bible/John'
+          )
+          .addText((text) =>
+            text
+              .setPlaceholder('{book}')
+              .setValue(this.plugin.settings.bookTagTemplate || '{book}')
+              .onChange(async (value) => {
+                this.plugin.settings.bookTagTemplate = value || '{book}'
+                await this.plugin.saveSettings()
+              })
+          )
+      }
+
       new Setting(this.expertSettingContainer)
         .setName('Add a Chapter Tag')
         .setDesc('Add a hidden chapter tag at bottom, for example #John1')
@@ -151,8 +170,29 @@ Obsidian Bible Reference  is proudly powered by
             .onChange(async (value) => {
               this.plugin.settings.chapterTagging = value
               await this.plugin.saveSettings()
+              pluginEvent.trigger('bible-reference:settings:re-render', [])
             })
         )
+
+      if (this.plugin.settings?.chapterTagging) {
+        new Setting(this.expertSettingContainer)
+          .setName('Chapter Tag Template')
+          .setDesc(
+            'Customize the chapter tag format. Use {book} for book name, {chapter} for chapter number. Example: Bible/{book}/Ch{chapter} → #Bible/John/Ch3'
+          )
+          .addText((text) =>
+            text
+              .setPlaceholder('{book}{chapter}')
+              .setValue(
+                this.plugin.settings.chapterTagTemplate || '{book}{chapter}'
+              )
+              .onChange(async (value) => {
+                this.plugin.settings.chapterTagTemplate =
+                  value || '{book}{chapter}'
+                await this.plugin.saveSettings()
+              })
+          )
+      }
 
       /**
        * Function to get the outgoing link position to stay compatible with the old version
