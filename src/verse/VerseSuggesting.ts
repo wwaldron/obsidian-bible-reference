@@ -9,6 +9,7 @@ import { ProviderFactory } from '../provider/ProviderFactory'
 import { BaseBibleAPIProvider } from '../provider/BaseBibleAPIProvider'
 import { BaseVerseFormatter } from './BaseVerseFormatter'
 import { IVerseSuggesting } from './IVerseSuggesting'
+import { formatTagFromTemplate } from '../utils/formatTagFromTemplate'
 
 /**
  * Verse Suggesting
@@ -56,13 +57,16 @@ export class VerseSuggesting
     if (this.settings?.bookTagging || this.settings?.chapterTagging) {
       bottom += ' %%'
       bottom += this.settings?.bookTagging
-        ? ` #${this.verseReference.bookName.replace(/ /g, '')}` // Remove spaces from book names in tags
+        ? ` #${formatTagFromTemplate(
+            this.settings?.bookTagTemplate || '{book}',
+            this.verseReference
+          )}`
         : ''
       bottom += this.settings?.chapterTagging
-        ? ` #${
-            this.verseReference.bookName.replace(/ /g, '') +
-            this.verseReference.chapterNumber // Remove spaces from book names in tags
-          }`
+        ? ` #${formatTagFromTemplate(
+            this.settings?.chapterTagTemplate || '{book}{chapter}',
+            this.verseReference
+          )}`
         : ''
       bottom += ' %%'
     }
