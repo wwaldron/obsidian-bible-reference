@@ -32,10 +32,8 @@ export interface BibleReferencePluginSettings {
   collapsedByDefault?: boolean
   enableHyperlinking?: boolean
   showVerseTranslation?: boolean
-  bookTagging?: boolean
-  chapterTagging?: boolean
-  bookTagTemplate?: string // template for book tags
-  chapterTagTemplate?: string // template for chapter tags
+  tagging?: boolean
+  tagTemplate?: string // template for tags, whitespace-separated for multiple tags
   bookBacklinking?: OutgoingLinkPositionEnum // this is refering to outgoing link
   chapterBacklinking?: OutgoingLinkPositionEnum // this is refering to outgoing link
   internalLinkingFormat: string // this is refering to internal link
@@ -60,10 +58,8 @@ export const DEFAULT_SETTINGS: BibleReferencePluginSettings = {
   collapsibleVerses: false,
   enableHyperlinking: true,
   showVerseTranslation: true,
-  bookTagging: false,
-  chapterTagging: false,
-  bookTagTemplate: '{book}',
-  chapterTagTemplate: '{book}{chapter}',
+  tagging: false,
+  tagTemplate: '{book} {book}{chapter}',
   enableBibleVerseLookupRibbon: false,
   optOutToEvents: false,
   bookBacklinking: OutgoingLinkPositionEnum.None,
