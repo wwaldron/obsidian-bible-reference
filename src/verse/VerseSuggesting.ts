@@ -54,20 +54,15 @@ export class VerseSuggesting
 
   public get bottom(): string {
     let bottom = super.bottom
-    if (this.settings?.bookTagging || this.settings?.chapterTagging) {
+    if (this.settings?.tagging) {
       bottom += ' %%'
-      bottom += this.settings?.bookTagging
-        ? ` #${formatTagFromTemplate(
-            this.settings?.bookTagTemplate || '{book}',
-            this.verseReference
-          )}`
-        : ''
-      bottom += this.settings?.chapterTagging
-        ? ` #${formatTagFromTemplate(
-            this.settings?.chapterTagTemplate || '{book}{chapter}',
-            this.verseReference
-          )}`
-        : ''
+      // Split template by whitespace to support multiple tags
+      const templates = (this.settings?.tagTemplate || '{book}').split(/\s+/)
+      for (const template of templates) {
+        if (template) {
+          bottom += ` #${formatTagFromTemplate(template, this.verseReference)}`
+        }
+      }
       bottom += ' %%'
     }
     if (

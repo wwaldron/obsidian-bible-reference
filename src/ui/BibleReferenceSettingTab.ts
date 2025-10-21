@@ -132,63 +132,35 @@ Obsidian Bible Reference  is proudly powered by
       this.expertSettingContainer.createEl('h2', { text: 'Expert Settings' })
 
       new Setting(this.expertSettingContainer)
-        .setName('Add a Book Tag')
-        .setDesc('Add a hidden book tag at bottom, for example #John')
+        .setName('Add Tags')
+        .setDesc(
+          'Add hidden tags at bottom. Tags are whitespace-separated in the template below.'
+        )
         .addToggle((toggle) =>
           toggle
-            .setValue(!!this.plugin.settings?.bookTagging)
+            .setValue(!!this.plugin.settings?.tagging)
             .onChange(async (value) => {
-              this.plugin.settings.bookTagging = value
+              this.plugin.settings.tagging = value
               await this.plugin.saveSettings()
               pluginEvent.trigger('bible-reference:settings:re-render', [])
             })
         )
 
-      if (this.plugin.settings?.bookTagging) {
+      if (this.plugin.settings?.tagging) {
         new Setting(this.expertSettingContainer)
-          .setName('Book Tag Template')
+          .setName('Tag Template')
           .setDesc(
-            'Customize the book tag format. Use {book} for book name, {chapter} for chapter number. Example: Bible/{book} → #Bible/John'
+            'Customize tag format. Use {book} for book name, {chapter} for chapter number, {verse} for verse number. For multiple tags, separate templates with whitespace. Example: "{book} {book}{chapter}" → #John #John3'
           )
           .addText((text) =>
             text
-              .setPlaceholder('{book}')
-              .setValue(this.plugin.settings.bookTagTemplate || '{book}')
-              .onChange(async (value) => {
-                this.plugin.settings.bookTagTemplate = value || '{book}'
-                await this.plugin.saveSettings()
-              })
-          )
-      }
-
-      new Setting(this.expertSettingContainer)
-        .setName('Add a Chapter Tag')
-        .setDesc('Add a hidden chapter tag at bottom, for example #John1')
-        .addToggle((toggle) =>
-          toggle
-            .setValue(!!this.plugin.settings?.chapterTagging)
-            .onChange(async (value) => {
-              this.plugin.settings.chapterTagging = value
-              await this.plugin.saveSettings()
-              pluginEvent.trigger('bible-reference:settings:re-render', [])
-            })
-        )
-
-      if (this.plugin.settings?.chapterTagging) {
-        new Setting(this.expertSettingContainer)
-          .setName('Chapter Tag Template')
-          .setDesc(
-            'Customize the chapter tag format. Use {book} for book name, {chapter} for chapter number. Example: Bible/{book}/Ch{chapter} → #Bible/John/Ch3'
-          )
-          .addText((text) =>
-            text
-              .setPlaceholder('{book}{chapter}')
+              .setPlaceholder('{book} {book}{chapter}')
               .setValue(
-                this.plugin.settings.chapterTagTemplate || '{book}{chapter}'
+                this.plugin.settings.tagTemplate || '{book} {book}{chapter}'
               )
               .onChange(async (value) => {
-                this.plugin.settings.chapterTagTemplate =
-                  value || '{book}{chapter}'
+                this.plugin.settings.tagTemplate =
+                  value || '{book} {book}{chapter}'
                 await this.plugin.saveSettings()
               })
           )
@@ -567,36 +539,6 @@ Obsidian Bible Reference  is proudly powered by
             // todo add event log stats fire
           })
       )
-  }
-
-  private setUpBookTagging(): void {
-    this.expertSettingContainer &&
-      new Setting(this.expertSettingContainer)
-        .setName('Add a Book Tag')
-        .setDesc('Add a hidden book tag at bottom, for example #John')
-        .addToggle((toggle) =>
-          toggle
-            .setValue(!!this.plugin.settings?.bookTagging)
-            .onChange(async (value) => {
-              this.plugin.settings.bookTagging = value
-              await this.plugin.saveSettings()
-            })
-        )
-  }
-
-  private setUpChapterTagging(): void {
-    this.expertSettingContainer &&
-      new Setting(this.expertSettingContainer)
-        .setName('Add a Chapter Tag')
-        .setDesc('Add a hidden chapter tag at bottom, for example #John1')
-        .addToggle((toggle) =>
-          toggle
-            .setValue(!!this.plugin.settings?.chapterTagging)
-            .onChange(async (value) => {
-              this.plugin.settings.chapterTagging = value
-              await this.plugin.saveSettings()
-            })
-        )
   }
 
   private setUpOptOutEventsOptions(
